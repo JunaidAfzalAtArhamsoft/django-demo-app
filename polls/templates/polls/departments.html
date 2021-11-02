@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Departments Detail</title>
+</head>
+<body>
+<h1>All available departments are</h1>
+{% if department_list %}
+<ul>
+    {% for department in department_list %}
+    <!-- <li><a href="/polls/departments/{{department.id}}">{{department.department_name }}</a></li> -->
+    <!-- Other and best way to do above task is -->
+    <li><a href="{% url 'polls:department_detail' department.id %}" >{{department.department_name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No Departments are available.</p>
+{% endif %}
+
+</body>
+</html>
