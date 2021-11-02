@@ -12,3 +12,6 @@ class Department(models.Model):
 class Employee(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     employee_name = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.employee_name

@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from .models import Department
+from .models import Department, Employee
 from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -28,7 +28,12 @@ def get_department(request, department_id):
     dep = get_object_or_404(Department, pk=department_id)
     output = '<h2>Details of department:</h2>' + f'<h3>Department Name:</h3><b>{dep.department_name}<b><br>' + \
              f'<h3>Department Location:</h3><b>{dep.department_location}<b><br>'
-    return HttpResponse(output)
+    employees = Employee.objects.all()
+    required_emp = []
+    for emp in employees:
+        if emp.department.id == department_id:
+            required_emp.append(emp.employee_name)
+    return HttpResponse(output + str(required_emp))
 
 
 def department_detail(request):
@@ -42,9 +47,17 @@ def department_detail(request):
 
 def register_employee(request):
 
-    # template = loader.get_template('polls/add_employee.html')
-    return render(request, 'polls/add_employee.html', {})
+    department_list = Department.objects.all()
+    context = {
+        'department_list': department_list
+    }
+    return render(request, 'polls/add_employee.html', context)
 
 
 def registration_done(request):
-    return render(request, 'polls/registration_done.html', {})
+    dep = Department.objects.get(pk=request.POST['department'])
+    emp = Employee(department=dep,
+                   employee_name='{} {}'.format(request.POST["fname"], request.POST["lname"]))
+    emp.save()
+    return HttpResponse(f'<b>Name</b>:{request.POST["fname"]} {request.POST["lname"]}<br><b>Department:</b> {dep.department_name}')
+    # return render(request, 'polls/registration_done.html', {})

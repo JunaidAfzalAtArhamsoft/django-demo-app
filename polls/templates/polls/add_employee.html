@@ -7,11 +7,18 @@
 <body>
 <h1>Employee Registration</h1>
 
-<form name="employee_registration" action="registration-done">
+<form name="employee_registration" action="registration-done" method="post">
+    <fieldset>
+        <legend><h1>Registration Form</h1></legend>
+    {% csrf_token %}
     First Name: <input type="text "  name="fname"><br><br>
     Last Name: <input type="text" name="lname"><br>
-    Sales Department <input type="radio" name="department_sale"><br>
+        {% for department in department_list %}
+        <input type="radio" name="department"  value={{department.id}}>{{department.department_name}} <br>
+        {% endfor %}
     <input type="submit" name="register">
+
+    </fieldset>
 </form>
 
 </body>
